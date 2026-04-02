@@ -49,7 +49,7 @@ export function DashboardCandidateCard({
         </Card>
       </Link>
 
-      <Card className="hidden h-full min-h-0 flex-col border-border shadow-sm transition-all hover:border-primary/30 hover:shadow-md md:flex">
+      <Card className="hidden h-full min-h-0 flex-1 flex-col border-border shadow-sm transition-all hover:border-primary/30 hover:shadow-md md:flex">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 p-5 pb-2">
           <CardTitle className="flex items-center gap-2 text-base font-semibold">
             <Users className="size-5 shrink-0 text-primary" />
