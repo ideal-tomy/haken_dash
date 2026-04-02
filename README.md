@@ -34,11 +34,26 @@ npm start
 
 ## Vercel デプロイ
 
-Next.js は **リポジトリのルート** にあります。GitHub などと連携し、**Root Directory は空（`.`）のまま**で問題ありません。
+Next.js は **このフォルダがアプリのルート** です（`package.json` と `app/` が同じ階層）。
 
-- **Framework Preset**: Next.js（自動検出）
-- **Build Command**: `npm run build`
-- **Install Command**: `npm install`（デフォルト）
-- **環境変数**: このデモでは不要
+### プロジェクト設定（ダッシュボード）
 
-以前 `web/` サブフォルダのみデプロイしていたプロジェクトは、リポジトリを更新したうえで **Redeploy** してください。
+| 項目 | 推奨値 |
+|------|--------|
+| **Framework Preset** | Next.js |
+| **Root Directory** | リポジトリのルートに `package.json` があるなら **空** または `.`。親フォルダがリポジトリで、このプロジェクトがサブフォルダなら **そのフォルダ名**（例: `haken_dash`） |
+| **Build Command** | 空欄（デフォルト）または `npm run build` |
+| **Output Directory** | **空欄のまま**（`out` や `dist` を入れない。Next.js は Vercel が出力先を管理します） |
+| **Install Command** | 空欄または `npm install` |
+| **Node.js Version** | 20.x 以上（`package.json` の `engines` 参照） |
+
+環境変数はこのデモでは不要です。ルートに `vercel.json` があり `framework: nextjs` を指定しています。
+
+### `404: NOT_FOUND`（Vercel の白いエラー画面）のとき
+
+1. **Root Directory** が古い `web` などになっていないか確認し、正しいフォルダに直す。
+2. **Output Directory** に手動で値が入っていたら削除する。
+3. 表示している URL が **古いプレビュー** の場合、ダッシュボードの **Deployments** から **最新の Ready** デプロイを開くか、本番ドメインを使う。
+4. デプロイの **Build Logs** で `npm run build` が成功しているか確認する（失敗するとページが出ません）。
+
+リポジトリを直したあとは **Redeploy**（「Redeploy」→ キャッシュの有無はどちらでも可）を実行してください。
