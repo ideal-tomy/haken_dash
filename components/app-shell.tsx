@@ -2,40 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Building2,
-  Home,
-  LayoutDashboard,
-  MessageSquare,
-  MoreHorizontal,
-  Sparkles,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { appTemplateConfig } from "@/lib/app-template-config";
 import { unreadDemoMessageCount } from "@/lib/demo-messages";
 import { DemoFab } from "@/components/demo-fab";
-
-const topNav = [
-  { href: "/", label: "ダッシュボード", icon: LayoutDashboard },
-  { href: "/candidates", label: "候補者", icon: Users },
-  { href: "/clients", label: "案件", icon: Building2 },
-  { href: "/operations", label: "実務・収益", icon: TrendingUp },
-  { href: "/knowledge", label: "ナレッジ", icon: Sparkles },
-] as const;
-
-const bottomNav = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/candidates", label: "候補者", icon: Users },
-  { href: "/clients", label: "案件", icon: Building2 },
-  { href: "/revenue", label: "収益", icon: TrendingUp },
-  { href: "/more", label: "その他", icon: MoreHorizontal },
-] as const;
+import { templateNavIcons } from "@/components/template-nav-icons";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const unread = unreadDemoMessageCount();
+  const { branding, shell } = appTemplateConfig;
 
   return (
     <div className="flex min-h-full flex-col">
@@ -43,14 +21,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <span className="text-sm font-semibold text-primary-alt">
-              派遣コックピット
+              {branding.productName}
             </span>
-            <Badge variant="ai" className="hidden sm:inline-flex">
-              AI デモ
-            </Badge>
+            {branding.badgeLabel ? (
+              <Badge variant="ai" className="hidden sm:inline-flex">
+                {branding.badgeLabel}
+              </Badge>
+            ) : null}
           </Link>
           <nav className="hidden md:flex flex-1 items-center justify-center gap-1 overflow-x-auto">
-            {topNav.map(({ href, label, icon: Icon }) => {
+            {shell.topNav.map(({ href, label, icon }) => {
+              const Icon = templateNavIcons[icon];
               const active =
                 href === "/"
                   ? pathname === "/"
@@ -72,18 +53,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <Link
-            href="/messages"
-            className="relative flex items-center gap-1 rounded-lg p-2 text-muted hover:bg-surface hover:text-foreground"
-            aria-label="メッセージ"
-          >
-            <MessageSquare className="size-5" />
-            {unread > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
-                {unread}
-              </span>
-            )}
-          </Link>
+          {shell.showMessagesLink ? (
+            <Link
+              href="/messages"
+              className="relative flex items-center gap-1 rounded-lg p-2 text-muted hover:bg-surface hover:text-foreground"
+              aria-label="メッセージ"
+            >
+              <MessageSquare className="size-5" />
+              {unread > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+                  {unread}
+                </span>
+              )}
+            </Link>
+          ) : (
+            <div className="w-10 shrink-0" aria-hidden />
+          )}
         </div>
       </header>
 
@@ -93,7 +78,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 pb-safe backdrop-blur md:hidden">
         <div className="mx-auto flex max-w-lg items-stretch justify-around">
-          {bottomNav.map(({ href, label, icon: Icon }) => {
+          {shell.bottomNav.map(({ href, label, icon }) => {
+            const Icon = templateNavIcons[icon];
             const active =
               href === "/"
                 ? pathname === "/"
@@ -115,7 +101,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </nav>
 
-      <DemoFab />
+      {shell.showDemoFab ? <DemoFab /> : null}
     </div>
   );
 }

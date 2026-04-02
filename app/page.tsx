@@ -13,6 +13,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DashboardCandidateCard } from "@/components/dashboard-candidate-card";
 import { DashboardMobileCardSlim } from "@/components/dashboard-mobile-card-slim";
+import { TemplateDashboardHeader } from "@/components/templates/layout-primitives";
+import {
+  appTemplateConfig,
+  dashboardExtensionSpanClass,
+  dashboardGridClass,
+} from "@/lib/app-template-config";
 import {
   candidates,
   clients,
@@ -51,19 +57,17 @@ export default function DashboardPage() {
   const trend = monthlyRevenueTrend();
   const lastRev = trend[trend.length - 1]?.amountManYen ?? 0;
   const docAlerts = countDocumentAlerts();
+  const { dashboard } = appTemplateConfig;
+  const gridCols = dashboard.gridColumns;
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight text-primary-alt sm:text-2xl">
-          ダッシュボード
-        </h1>
-        <p className="mt-1 text-xs text-muted sm:text-sm">
-          管理を便利に、判断をAIで — デモデータで全体像をご覧ください。
-        </p>
-      </div>
+      <TemplateDashboardHeader
+        title={dashboard.pageTitle}
+        subtitle={dashboard.pageSubtitle}
+      />
 
-      <div className="grid min-w-0 grid-cols-3 items-stretch gap-1.5 md:gap-4 xl:gap-6">
+      <div className={dashboardGridClass(gridCols)}>
         <div className="flex h-full min-h-0 min-w-0 flex-col">
           <DashboardCandidateCard
             totalCount={candidates.length}
@@ -296,64 +300,72 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <div className="col-span-1 flex h-full min-h-0 min-w-0 flex-col">
-          <DashboardMobileCardSlim
-            href="/operations"
-            icon={Clock}
-            title="勤怠・請求"
-            subtitle="勤怠情報から経費計算連携"
-          />
-          <Link
-            href="/operations"
-            className="group hidden min-h-0 w-full flex-1 flex-col md:flex"
+        {dashboard.extensionCards.attendanceBilling ? (
+          <div
+            className={`${dashboardExtensionSpanClass("attendance", gridCols)} flex h-full min-h-0 min-w-0 flex-col`}
           >
-            <Card className="flex h-full min-h-0 flex-1 flex-col border-dashed transition-all group-hover:border-primary/40 group-hover:shadow-md">
-              <CardHeader className="shrink-0 p-5 pb-2">
-                <CardTitle className="text-base font-semibold">
-                  勤怠・請求（拡張枠）
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex min-h-0 flex-1 flex-col p-5 pt-0 text-sm text-muted">
-                <p className="min-h-0 flex-1 leading-snug">
-                  CSV 取込イメージ。今回はプレースホルダ — 実務・収益ハブへ
-                </p>
-                <span className="mt-auto inline-flex shrink-0 items-center gap-1 pt-1 font-medium text-primary">
-                  開く <ArrowRight className="size-4" />
-                </span>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
+            <DashboardMobileCardSlim
+              href="/operations"
+              icon={Clock}
+              title="勤怠・請求"
+              subtitle="勤怠情報から経費計算連携"
+            />
+            <Link
+              href="/operations"
+              className="group hidden min-h-0 w-full flex-1 flex-col md:flex"
+            >
+              <Card className="flex h-full min-h-0 flex-1 flex-col border-dashed transition-all group-hover:border-primary/40 group-hover:shadow-md">
+                <CardHeader className="shrink-0 p-5 pb-2">
+                  <CardTitle className="text-base font-semibold">
+                    勤怠・請求（拡張枠）
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex min-h-0 flex-1 flex-col p-5 pt-0 text-sm text-muted">
+                  <p className="min-h-0 flex-1 leading-snug">
+                    CSV 取込イメージ。今回はプレースホルダ — 実務・収益ハブへ
+                  </p>
+                  <span className="mt-auto inline-flex shrink-0 items-center gap-1 pt-1 font-medium text-primary">
+                    開く <ArrowRight className="size-4" />
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        ) : null}
 
-        <div className="col-span-2 flex h-full min-h-0 min-w-0 flex-col">
-          <DashboardMobileCardSlim
-            href="/knowledge"
-            icon={Sparkles}
-            title="社内ナレッジ"
-            subtitle="社内情報管理と共有"
-          />
-          <Link
-            href="/knowledge"
-            className="group hidden min-h-0 w-full flex-1 flex-col md:flex"
+        {dashboard.extensionCards.knowledgeAi ? (
+          <div
+            className={`${dashboardExtensionSpanClass("knowledge", gridCols)} flex h-full min-h-0 min-w-0 flex-col`}
           >
-            <Card className="flex h-full min-h-0 flex-1 flex-col border-dashed transition-all group-hover:border-primary/40 group-hover:shadow-md">
-              <CardHeader className="shrink-0 p-5 pb-2">
-                <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                  <Sparkles className="size-5 shrink-0 text-primary" />
-                  社内ナレッジ AI（拡張枠）
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex min-h-0 flex-1 flex-col p-5 pt-0 text-sm text-muted">
-                <p className="min-h-0 flex-1 leading-snug">
-                  入管トラブル FAQ をチャットで — デモでは概要のみ表示
-                </p>
-                <span className="mt-auto inline-flex shrink-0 items-center gap-1 pt-1 font-medium text-primary">
-                  ナレッジへ <ArrowRight className="size-4" />
-                </span>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
+            <DashboardMobileCardSlim
+              href="/knowledge"
+              icon={Sparkles}
+              title="社内ナレッジ"
+              subtitle="社内情報管理と共有"
+            />
+            <Link
+              href="/knowledge"
+              className="group hidden min-h-0 w-full flex-1 flex-col md:flex"
+            >
+              <Card className="flex h-full min-h-0 flex-1 flex-col border-dashed transition-all group-hover:border-primary/40 group-hover:shadow-md">
+                <CardHeader className="shrink-0 p-5 pb-2">
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <Sparkles className="size-5 shrink-0 text-primary" />
+                    社内ナレッジ AI（拡張枠）
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex min-h-0 flex-1 flex-col p-5 pt-0 text-sm text-muted">
+                  <p className="min-h-0 flex-1 leading-snug">
+                    入管トラブル FAQ をチャットで — デモでは概要のみ表示
+                  </p>
+                  <span className="mt-auto inline-flex shrink-0 items-center gap-1 pt-1 font-medium text-primary">
+                    ナレッジへ <ArrowRight className="size-4" />
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        ) : null}
       </div>
     </div>
   );

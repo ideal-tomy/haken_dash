@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { AppShell } from "@/components/app-shell";
+import { appTemplateConfig } from "@/lib/app-template-config";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,8 +19,8 @@ const notoSansJp = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "派遣コックピット（営業デモ）",
-  description: "AI 搭載型業務管理ダッシュボード デモ",
+  title: appTemplateConfig.branding.metadata.title,
+  description: appTemplateConfig.branding.metadata.description,
 };
 
 export default function RootLayout({

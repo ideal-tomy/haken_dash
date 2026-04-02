@@ -17,6 +17,12 @@ import {
   RevenueCacBreakdownChart,
   RevenueMonthlyChart,
 } from "@/components/revenue-charts";
+import {
+  TemplateKpiGrid,
+  TemplatePageHeader,
+  TemplatePageStack,
+  TemplateTwoColumnGrid,
+} from "@/components/templates/layout-primitives";
 import { getCacDemo, getBreakevenSeries, getReferralRecoveryDemo, getRefundRiskDemo, getRevenueSummaryKpis, getRevenueTrendForChart } from "@/lib/revenue-demo";
 
 function formatManYen(n: number) {
@@ -40,15 +46,13 @@ export default function RevenuePage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-primary-alt">収益・LTV</h1>
-        <p className="mt-1 text-sm text-muted">
-          月次売上・紹介料回収・返金リスク・CAC・損益分岐のデモダッシュボード（数値はダミー／クライアント加重は実データ連動）
-        </p>
-      </div>
+    <TemplatePageStack>
+      <TemplatePageHeader
+        title="収益・LTV"
+        description="月次売上・紹介料回収・返金リスク・CAC・損益分岐のデモダッシュボード（数値はダミー／クライアント加重は実データ連動）"
+      />
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <TemplateKpiGrid>
         <Card>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5 text-xs font-medium">
@@ -126,7 +130,7 @@ export default function RevenuePage() {
             累積粗利が平均CAC（{be.cacManYen} 万円）を超える月。下図参照。
           </CardContent>
         </Card>
-      </div>
+      </TemplateKpiGrid>
 
       <Card>
         <CardHeader>
@@ -139,11 +143,13 @@ export default function RevenuePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <RevenueMonthlyChart data={trend} />
+          <ClientOnlyChart className="h-[280px] min-h-[240px]">
+            <RevenueMonthlyChart data={trend} />
+          </ClientOnlyChart>
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <TemplateTwoColumnGrid>
         <Card className="flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -265,9 +271,9 @@ export default function RevenuePage() {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </TemplateTwoColumnGrid>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <TemplateTwoColumnGrid>
         <Card>
           <CardHeader>
             <CardTitle className="text-base">CAC 内訳（1名あたり・デモ）</CardTitle>
@@ -313,7 +319,7 @@ export default function RevenuePage() {
             </ClientOnlyChart>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </TemplateTwoColumnGrid>
+    </TemplatePageStack>
   );
 }
