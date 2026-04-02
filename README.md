@@ -5,7 +5,6 @@ Next.js 静的デモ — Supabase / 実 API なしでブラウザだけで動作
 ## 起動
 
 ```bash
-cd web
 npm install
 npm run dev
 ```
@@ -21,7 +20,7 @@ npm start
 
 ## データ
 
-- 型定義: リポジトリ直下の [`../data/types.ts`](../data/types.ts)
+- 型定義: [`data/types.ts`](data/types.ts)
 - シード（8 社・20 名）: `lib/demo-data.ts`
 - メッセージ（翻訳デモ）: `lib/demo-messages.ts`  
   - 50 パターンに増やす場合は `demoMessages` 配列へオブジェクトを追記してください（`返答demo.md` を手で転記するのが確実です）。
@@ -33,6 +32,13 @@ npm start
 3. **書類・OCR** — 「書類」または右下 FAB（スマホ表示）で OCR 擬似フロー。Dhammika（書類不備）を候補者詳細で赤表示。
 4. **メッセージ翻訳** — `/messages` でシンハラ語と「AI 翻訳を表示」トグル。要注意バッジをアピール。
 
-## Vercel デプロイ（任意）
+## Vercel デプロイ
 
-`web` フォルダをプロジェクトルートとしてインポートするか、モノレポの場合は Root Directory に `web` を指定してください。環境変数はデモでは不要です。
+Next.js は **リポジトリのルート** にあります。GitHub などと連携し、**Root Directory は空（`.`）のまま**で問題ありません。
+
+- **Framework Preset**: Next.js（自動検出）
+- **Build Command**: `npm run build`
+- **Install Command**: `npm install`（デフォルト）
+- **環境変数**: このデモでは不要
+
+以前 `web/` サブフォルダのみデプロイしていたプロジェクトは、リポジトリを更新したうえで **Redeploy** してください。
